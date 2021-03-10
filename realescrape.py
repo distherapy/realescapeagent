@@ -1,4 +1,4 @@
-import pandas as pd
+port pandas as pd
 import requests
 import scrapy
 import re
@@ -16,9 +16,10 @@ state = input("Type the initials for the state i.e. 'NJ':")
 state_full = state.state(full)
 pmin = input("Type the minimum price digits only i.e. '35000':")
 pmax = input("Type the maximum price digits only i.e. '125000':")
-lmin = input("Type the minimum acreage in sq feet (1 acre is 43560 square feet):")
-lmax = input("Type the maximum acreage in sq feet (50 acres equals 2178000 square feet):")
-
+lmin = input("Type the minimum acreage:")
+lminsqf = lmin * 43560
+lmax = input("Type the maximum acreage:")
+lmaxsqf = lmax * 43560
 def realtor(com, res, hmin, hmax, lmin, pmin, pmax, county, state):
 	url = 'https://www.realtor.com/realestateandhomes-search/'+ county + '-' + 'County_' + state + '/price-' + pmin + '-' + pmax + '/lot-sqft-' + lmin
 	r = requests.get(url)
@@ -27,8 +28,8 @@ def realtor(com, res, hmin, hmax, lmin, pmin, pmax, county, state):
 	df.head()
 	print(df)
 
-def mls(mls, com, res, hmin, hmax, lmin, pmin, pmax, county, state):
-	url = 'https://www.mls.com/'+ mls'
+def mls(mls):
+	url = 'https://www.mls.com/'+ mls
 	r = requests.get(url)
 	df_list = pd.read_html(r.text)
 	df = df_list[0]
@@ -50,9 +51,9 @@ def landzero(pmin, pmax, county, state):
 	df = df_list[0]
 	df.head()
 	print(df)
-	
+		
 def landflip(county, state_full, pmin, pmax):
-	url = 'https://www.landflip.com/land-fsbo/' + state + '/' + pmin +'-minprice/' + pmax +'-maxprice/
+	url = 'https://www.landflip.com/land-for-sale/' + state + '/' + pmin +'-minprice/' + pmax +'-maxprice/
 	r = requests.get(url)
 	df_list = pd.read_html(r.text)
 	df = df_list[0]
@@ -66,6 +67,16 @@ def propertyshark(county, state, pmin, pmax):
 	df = df_list[0]
 	df.head()
 	print(df)
+
+	
+def loa(county, state, pmin, pmax):
+	url = 'https://www.landsofamerica.com/' + county + '-County-' + state +'all-land/under-' + pmax + '/over-' + lmin + '-acres'
+	r = requests.get(url)
+	df_list = pd.read_html(r.text)
+	df = df_list[0]
+	df.head()
+	print(df)
+
 '''
 faceamount = response.xpath('faceValue')
 print(faceamount)
